@@ -65,7 +65,7 @@ func (m *GoMiddleware) Auth(next echo.HandlerFunc) echo.HandlerFunc {
 		session, _ := m.cookieStore.Get(c.Request(), "SessionID")
 
 		if len(session.Values) == 0 || !session.Values["Authenticated"].(bool) {
-			resp.Message = "Not Register"
+			resp.Message = "Forbidden"
 			resp.Status = models.StatusFailed
 			return c.JSON(http.StatusForbidden, resp)
 		}

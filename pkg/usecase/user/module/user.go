@@ -8,19 +8,20 @@ import (
 	"github.com/rest-api-go/pkg/models"
 )
 
-func (u *user) Register(m models.User) error {
+func (u *user) Register(m models.User) (int64, error) {
+	var userID int64
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(m.Password), bcrypt.DefaultCost)
 	if len(hashedPassword) != 0 || err == nil {
 		m.Password = string(hashedPassword[:])
-		_, err := u.userRepo.Register(m)
+		userID, err = u.userRepo.Register(m)
 		if err != nil {
-			return err
+			return userID, err
 		}
 	} else {
-		return errors.New("Error Hash Password")
+		return userID, errors.New("Error Hash Password")
 	}
 
-	return err
+	return userID, err
 }
 
 func (u *user) Login(username string, password string) (models.User, error) {

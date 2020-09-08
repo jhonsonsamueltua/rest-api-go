@@ -23,14 +23,14 @@ func (d *user) Register(c echo.Context) error {
 		Name:     name,
 	}
 
-	err := d.userUsecase.Register(user)
+	userID, err := d.userUsecase.Register(user)
 	if err != nil {
 		resp.Data = nil
 		resp.Message = err.Error()
 		return c.JSON(http.StatusInternalServerError, resp)
 	}
-
-	resp.Data = username
+	user.UserID = userID
+	resp.Data = user
 	resp.Status = models.StatusSucces
 	resp.Message = "Register is successful"
 	return c.JSON(http.StatusOK, resp)
